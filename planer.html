@@ -47,6 +47,25 @@
         .tab-btn.active { background: #27ae60; color: white; }
         .pool-content { animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Handy-Optimierung (Responsive Design) */
+    @media (max-width: 800px) {
+        body {
+            flex-direction: column; /* Stapelt Pool und Plan untereinander */
+            padding: 10px;
+        }
+        #pool, #planner {
+            width: 100%; /* Nutzt die volle Breite */
+            height: auto;
+        }
+        #pool {
+            margin-bottom: 20px;
+        }
+        .draggable {
+            padding: 15px; /* Größere Klickfläche für Finger */
+            font-size: 1em;
+        }
+    }
    </style>
 </head>
 <body>
@@ -211,28 +230,48 @@
 <script>
     // Tab-Logik
     function filterPool(category, btn) {
-        // Alle Inhalte verstecken
         document.querySelectorAll('.pool-content').forEach(el => el.style.display = 'none');
-        // Gewählte Kategorie zeigen
         document.querySelector('.' + category).style.display = 'block';
-        
-        // Buttons umstylen
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
 
-    // Drag & Drop Logik (bleibt gleich)
-    function allowDrop(ev) { ev.preventDefault(); }
-    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    // Drag & Drop Funktionen
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
     function drop(ev) {
         ev.preventDefault();
         var data = ev.dataTransfer.getData("text");
-        var nodeCopy = document.getElementById(data).cloneNode(true);
+        var originalElement = document.getElementById(data);
+        if(!originalElement) return;
+
+        var nodeCopy = originalElement.cloneNode(true);
         nodeCopy.id = "new_" + Math.random(); 
         nodeCopy.onclick = function() { this.remove(); };
-        ev.target.appendChild(nodeCopy);
+        
+        // Findet die korrekte Drop-Zone, auch wenn man auf ein Element darin droppt
+        var target = ev.target;
+        while (target && !target.classList.contains('drop-zone')) {
+            target = target.parentElement;
+        }
+        
+        if (target) {
+            target.appendChild(nodeCopy);
+        }
     }
+
+    // HANDY-FIX: Touch-Unterstützung nachladen
+    var script = document.createElement('script');
+    script.src = "https://jsdelivr.net";
+    document.head.appendChild(script);
 </script>
+
 
 </body>
 </html>

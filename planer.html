@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Tennis-Planer: Stufe Rot (4-8 J.)</title>
+    <style>
+        :root { --main-green: #27ae60; --blue: #3498db; --orange: #f39c12; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; display: flex; gap: 20px; padding: 20px; background: #f4f7f6; margin: 0; }
+        
+        /* Pool-Bereich */
+        #pool { width: 40%; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); height: 95vh; overflow-y: auto; }
+        .pool-category { font-weight: bold; margin: 20px 0 10px 0; color: white; background: var(--main-green); padding: 5px 10px; border-radius: 4px; }
+        .cat-2 { background: var(--blue); }
+        .cat-3 { background: #9b59b6; }
+        .cat-4 { background: var(--orange); }
+        .cat-5 { background: #e74c3c; }
+
+        .draggable { 
+            background: #fff; border: 1px solid #ddd; padding: 10px; margin-bottom: 8px; 
+            cursor: move; border-radius: 6px; font-size: 0.85em; line-height: 1.4;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .draggable:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translateY(-2px); }
+        .draggable strong { display: block; color: #2c3e50; margin-bottom: 3px; }
+
+        /* Plan-Bereich */
+        #planner { width: 55%; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: var(--main-green); margin: 0 0 10px 0; border-bottom: 2px solid var(--main-green); }
+        .time-slot { margin-bottom: 20px; padding: 10px; border: 1px solid #eee; border-radius: 8px; background: #fdfdfd; }
+        .time-label { font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .drop-zone { min-height: 100px; display: flex; flex-direction: column; gap: 8px; padding: 5px; border: 2px dashed #ccc; border-radius: 6px; }
+
+        @media print {
+            #pool, .btn-print, .instr { display: none !important; }
+            body { padding: 0; }
+            #planner { width: 100%; box-shadow: none; }
+            .drop-zone { border: 1px solid #eee; }
+            .draggable { border: 1px solid #ccc; page-break-inside: avoid; }
+        }
+        .btn-print { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; background: var(--main-green); color: white; border: none; cursor: pointer; border-radius: 50px; font-weight: bold; }
+   
+        /* Styling für die Tab-Buttons */
+        .tab-btn { 
+            padding: 8px 12px; border: none; border-radius: 4px; background: #ddd; 
+            cursor: pointer; font-weight: bold; font-size: 0.8em; transition: 0.3s;
+        }
+        .tab-btn.active { background: #27ae60; color: white; }
+        .pool-content { animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+   </style>
+</head>
+<body>
+
+<button class="btn-print" onclick="window.print()">🖨️ Plan drucken</button>
+
+<div id="pool">
+    <h2>Übungspool</h2>
+    <!-- Empfehlungs-Leiste  -->
+    <div style="background: #fff8e1; border: 1px solid #ffe082; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85em; color: #856404;">
+        <strong>📋 Planungshilfe (pro 45 Min. Einheit):</strong>
+        <ul style="margin: 5px 0 0 15px; padding: 0;">
+            <li><strong>Warm-up:</strong> 2-3 Übungen (Wechsel alle 3-4 Min.)</li>
+            <li><strong>Ballgefühl:</strong> 2-3 Übungen (kleine Challenges einbauen)</li>
+            <li><strong>Technik:</strong> Max. 1-2 Schwerpunkte (Qualität vor Quantität)</li>
+            <li><strong>Abschluss:</strong> 1 Spiel für den maximalen Spaßfaktor</li>
+        </ul>
+    </div>
+
+    <!-- Tab-Navigation -->
+    <div class="tab-bar" style="display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap;">
+        <button class="tab-btn active" onclick="filterPool('cat-koor', this)">Warm-up</button>
+        <button class="tab-btn" onclick="filterPool('cat-ball', this)">Ballgefühl</button>
+        <button class="tab-btn" onclick="filterPool('cat-tech', this)">Technik</button>
+        <button class="tab-btn" onclick="filterPool('cat-spiel', this)">Spiele</button>
+    </div>
+
+    <p class="instr" style="font-size: 0.8em; color: #666;">Übung in den Plan ziehen. Klick im Plan zum Löschen.</p>
+
+    <!-- KATEGORIE: KOORDINATION (Warm-up) -->
+    <div class="pool-content cat-koor">
+        <div class="pool-category">1. Reaktionsfähigkeit</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="r1"><strong>Farben-Rallye:</strong> Auf Kommando (z.B. "Blau!") so schnell wie möglich zum passenden Hütchen rennen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="r2"><strong>Körperteil-Klatsch:</strong> Trainer ruft ein Körperteil (z.B. "Knie!"). Kinder müssen es sofort berühren.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="r3"><strong>Schattenboxen:</strong> Partnerübung. Ein Kind macht eine Bewegung vor, das andere spiegelt sie zeitgleich.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="r4"><strong>Ball fallen lassen:</strong> Trainer lässt Ball aus Schulterhöhe fallen. Kind fängt ihn vor dem 2. Aufsprung.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="r5"><strong>Signal-Lauf:</strong> Laufen bei Pfiff, Hinsetzen bei Klatschen, Rückwärtslaufen bei Ruf.</div>
+
+        <div class="pool-category cat-2">2. Gleichgewicht</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="g1"><strong>Storch im Salat:</strong> Auf einem Bein stehen und mit dem Schläger Kreise in die Luft malen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="g2"><strong>Seiltänzer:</strong> Auf den Platzlinien balancieren, ohne "ins Wasser" (ins Feld) zu fallen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="g3"><strong>Die Schildkröte:</strong> Ball auf dem Schläger balancieren, während man über Hindernisse steigt.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="g4"><strong>Standwaage-Check:</strong> Wie ein Flugzeug auf einem Bein stehen, während der Trainer "Wind" (wedeln) macht.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="g5"><strong>Linien-Hüpfen:</strong> Einbeinig über die Grundlinie hin und her springen und sicher landen.</div>
+
+        <div class="pool-category cat-3">3. Orientierung</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="o1"><strong>Hütchen-Slalom:</strong> Parcours durchlaufen, Blick bleibt immer fest zum Trainer oder Netz gerichtet.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="o2"><strong>Ecken-Rennen:</strong> 4 Ecken sind Tiere (Löwe, Maus etc.). Trainer ruft Tier, Kinder rennen zur Ecke.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="o3"><strong>Blinder Passagier:</strong> Ein Kind schließt die Augen und wird vom Partner per Tippen durch das Feld gesteuert.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="o4"><strong>Linien-Memory:</strong> Kinder müssen so schnell wie möglich alle Linien einer bestimmten Farbe ablaufen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="o5"><strong>Rückwärts-Parcours:</strong> Einfachen Hütchen-Slalom rückwärts durchlaufen, ohne etwas umzuwerfen.</div>
+
+        <div class="pool-category cat-4">4. Differenzierung</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="d1"><strong>Zauberhand:</strong> Ball nur 10 cm hochwerfen und völlig lautlos ("wie eine Feder") wieder fangen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="d2"><strong>Weitwurf vs. Nahwurf:</strong> Einen Ball weit übers Netz werfen, den nächsten exakt in einen nahen Reifen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="d3"><strong>Ball-Rollen:</strong> Ball mit dem Schläger so sanft rollen, dass er genau auf einer Linie liegen bleibt.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="d4"><strong>Stärke-Check:</strong> Ball erst "ganz fest" gegen den Zaun werfen, dann "ganz zart" zur ersten Linie.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="d5"><strong>Eierlauf-Rennen:</strong> Ball auf dem Schläger tragen und dabei das Tempo steigern, ohne dass er runterfällt.</div>
+
+        <div class="pool-category cat-5">5. Rhythmisierung</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="rh1"><strong>Klatsch-Marsch:</strong> Trainer klatscht Rhythmus (kurz-kurz-lang). Kinder hüpfen diesen Takt nach.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="rh2"><strong>Reifen-Sprung:</strong> Reifen liegen in Abständen. Kinder springen flüssig im Takt hindurch.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="rh3"><strong>Ball-Tipp-Takt:</strong> Im Gehen Ball gleichmäßig prellen – bei jedem Schritt genau ein Schlag.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="rh4"><strong>Schatten-Lauf:</strong> Trainer gibt Schrittrhythmus vor (z.B. Hopserlauf), alle machen synchron mit.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="rh5"><strong>Bounce-Hit-Takt:</strong> Ball anwerfen, laut "Auf-Sprung-Schlag" im Takt sagen und wieder fangen.</div>
+    </div>
+
+    <!-- KATEGORIE: BALLGEFÜHL -->
+    <div class="pool-content cat-ball" style="display:none;">
+        <div class="pool-category" style="background:#f39c12;">🎾 Ballgefühl (Stufe Rot)</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b1"><strong>Ball-Zirkus (1):</strong> Ball mit Schläger 1. tippen, 2. jonglieren, 3. u. 4. mit nicht Schlaghand.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b1"><strong>Ball-Zirkus (2):</strong> Ball mit Schläger und Hand im Wechsel tippen oder jonglieren.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b1"><strong>Ball-Zirkus (3):</strong> Ball mit Schläger und Körperteil (außer Hand) im Wechsel tippen oder jonglieren.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b1"><strong>Pizza-Taxi:</strong> Ball auf Schläger balancieren & Slalom laufen, ohne das die Pizza runter fällt.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b2"><strong>Boden-Hockey:</strong> Den Ball nur mit Hockeyschläger durch Hütchen-Tore führen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b3"><strong>Dribbel-König:</strong> Unterschiedliche Bälle wie Basketball am Boden prellen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b3"><strong>Schmetterlinge fangen:</strong> Unterschiedliche Bälle nach oben werfen und im Sprung fangen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b4"><strong>Känguru:</strong> Ball zwischen die Knie klemmen und eine Strecke hüpfen, ohne ihn zu verlieren.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b5"><strong>Pfannkuchen:</strong> Den Ball auf dem Schläger hochwerfen, den Schläger schnell drehen und mit der Rückseite fangen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b6"><strong>Eierlauf:</strong> Den Ball auf dem Schläger tragen und dabei über kleine Hindernisse (Linien/Seile) steigen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b7"><strong>Staubsauger:</strong> Den Ball mit dem Schläger am Boden vor sich her "saugen" (rollen), bis er in einem Reifen landet.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b8"><strong>Ball-Stopp:</strong> Der Trainer rollt einen Ball zu, das Kind muss ihn mit dem Schläger "einfangen" und sofort zum Stillstand bringen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b9"><strong>Vulkan-Ausbruch:</strong> Viele Bälle liegen im Feld. Die Kinder müssen sie so schnell wie möglich mit dem Schläger aus dem Feld rollen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b10"><strong>Schatzsuche:</strong> Bälle mit dem Schläger in einen Reifen (Schatztruhe) schieben, ohne die Hände zu benutzen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b11"><strong>Eiswaffel:</strong> Ball am Schlägerherz (Kindersitz) balancieren.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b12"><strong>Glockenspiel:</strong> Den Ball ganz sanft gegen das Netz werfen, sodass er nur kurz "klingelt" und direkt davor liegen bleibt.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b13"><strong>Zirkus:</strong>Den Ball auf dem Schläger hochkant balancieren (auf dem Rahmen) – für Profis!</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b14"><strong>Tunnel:</strong> Den Ball durch die eigenen Beine rollen und auf der anderen Seite mit dem Schläger wieder abfangen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="b15"><strong>Ball-Lift:</strong> Den Ball zwischen Schläger und Fuß einklemmen und versuchen, ihn kontrolliert hochzuheben.</div>
+    </div>
+
+    <!-- KATEGORIE: TECHNIK -->
+    <div class="pool-content cat-tech" style="display:none;">
+        <div class="pool-category" style="background:#3498db;">🎾 Technik (Stufe Rot)</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t1"><strong>1. Low-Five:</strong> Die Hand des Trainers tief abklatschen. Trainiert den idealen Treffpunkt vor dem Körper.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t2"><strong>2. Zaun-Klatscher:</strong> Ball sanft gegen den Zaun drücken. Verhindert zu weites Ausholen bei den Kids.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t3"><strong>3. Zauberstab:</strong> Nach dem Schlag mit dem Schlägerkopf zum Ziel zeigen (Ausschwung-Kontrolle).</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t4"><strong>4. Türen-Schließer:</strong> Beidhändige Rückhand führen, als würde man eine schwere Tür zudrücken.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t5"><strong>5. Fliegenklatsche:</strong> Kurze, trockene Volleys am Netz spielen, ohne auszuholen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t6"><strong>6. Eis-Waffel-Wurf:</strong> Ball hochwerfen und im Schlägerherz auffangen. Vorübung für den Aufschlag.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t7"><strong>7. Riesenschritte:</strong> Vor jedem Schlag einen großen Ausfallschritt zum Ball machen (dynamische Beinarbeit).</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t8"><strong>8. Stopp-Schild:</strong> Nach dem Treffpunkt die Bespannung wie ein Stopp-Schild zum Gegner zeigen lassen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t9"><strong>9. Boden-Surfer:</strong> Den Ball ganz flach und kontrolliert knapp über das Netz schieben.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t10">strong>10. Reifen-Target:</strong> Vorhand/Rückhand gezielt in einen großen Reifen am Boden spielen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t11"><strong>11. Raketen-Start:</strong> Schläger unter den Ball führen und steil nach oben ziehen (Topspin-Grundlage).</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="t12"><strong>12. Partner-Schieber:</strong> Zu zweit den Ball am Boden mit der Vorhandseite hin- und herschieben (Gefühl für Winkel).</div>
+    </div>
+       
+    <!-- KATEGORIE: ABSCHLUSSRITUALE & SPIELE -->
+    <div class="pool-content cat-spiel" style="display:none;">
+        <div class="pool-category" style="background:#e74c3c;">🏆 Abschlussspiele (Stufe Rot)</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="s1"><strong>1. Königspaar:</strong> Wer einen Punkt macht, steigt eine Seite auf. Wer verliert, wechselt auf die "Herausforderer-Seite".</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="s2"><strong>2. Abwerfen:</strong> Kinder stehen in einer Hälfte, der Trainer spielt Bälle ein. Wer berührt wird, muss eine kleine Aufgabe machen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="s3"><strong>3. Linien-Fangen:</strong> Fangen spielen, aber alle (auch der Fänger) dürfen nur auf den Linien des Tennisplatzes laufen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="s4"><strong>4. Eier-Klau:</strong> In der Mitte liegen viele Bälle. Zwei Teams müssen so schnell wie möglich Bälle in ihren "Heim-Reifen" rollen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="s5"><strong>5. Riesen-Tennis:</strong> Alle Kinder spielen gegen den Trainer. Der Trainer hat ein großes Feld, die Kinder teilen sich ein kleines.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="s6"><strong>6. Ball-Transport:</strong> Zwei Kinder halten einen Ball zwischen ihren Schlägern fest und müssen ihn gemeinsam ins Ziel tragen.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="s7"><strong>7. Krokodil-Sumpf:</strong> Die Kinder müssen das Feld überqueren, ohne vom Trainer (dem Krokodil) mit einem Ball sanft angeworfen zu werden.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="s8"><strong>8. Abräum-Duelle:</strong> Hütchen stehen auf der T-Linie. Wer ein Hütchen mit dem Ball abschießt, darf es für sein Team einsammeln.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="s9"><strong>9. Fuchs & Hase:</strong> Ein Kind (Hase) prellt den Ball, das andere (Fuchs) versucht es zu fangen – beide mit Schläger in der Hand.</div>
+        <div class="draggable" draggable="true" ondragstart="drag(event)" id="s10"><strong>10. Raketen-Abschuss:</strong> Alle Kinder schlagen gleichzeitig ihre Bälle so hoch wie möglich. Wessen "Rakete" fliegt am höchsten?</div>
+    </div>
+
+</div>
+    
+
+<div id="planner">
+    <h1>Trainingsplan: Stufe Rot</h1>
+    <p>Datum: _________ Gruppe: _________</p>
+    <!-- Zeitfenster  -->
+    <div class="time-slot">
+        <div class="time-label">1. Warm-up & Koordination <span>10 Min</span></div>
+        <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+
+    <div class="time-slot">
+        <div class="time-label">2. Ballgefühl / Ballgewöhnung <span>10 Min</span></div>
+        <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+
+    <div class="time-slot">
+        <div class="time-label">3. Techniktraining <span>15 Min</span></div>
+        <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+
+    <div class="time-slot">
+        <div class="time-label">4. Abschlussspiel <span>10 Min</span></div>
+        <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+    <!-- DER SAISON-RATGEBER -->
+    <div class="advisor-box">
+        <h3>💡 Saison-Ratgeber (4-7 Jahre)</h3>
+        <ul>
+            <li><strong>Wiederholung ist King:</strong> Kinder in diesem Alter lieben es, Übungen zu meistern. Behalte Übungen ruhig 3 Wochen am Stück bei. Wiederholung ist wichtig.</li>
+            <li><strong>Auffrischung:</strong> Alle 6 Wochen eine "Best-of"-Stunde der letzten 6 Wochen einschieben, um Gelerntes spielerisch zu prüfen.</li>
+            <li><strong>Bildsprache:</strong> Nutze immer Begriffe wie "Pizza", "Känguru" oder "Staubsauger" – das bleibt im Kopf!</li>
+            <li><strong>Erfolgserlebnis:</strong> Beende jede Einheit mit einem Erfolgserlebnis (z.B. Ball in den Korb treffen), damit sie mit einem Lächeln gehen.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    // Tab-Logik
+    function filterPool(category, btn) {
+        // Alle Inhalte verstecken
+        document.querySelectorAll('.pool-content').forEach(el => el.style.display = 'none');
+        // Gewählte Kategorie zeigen
+        document.querySelector('.' + category).style.display = 'block';
+        
+        // Buttons umstylen
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    // Drag & Drop Logik (bleibt gleich)
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var nodeCopy = document.getElementById(data).cloneNode(true);
+        nodeCopy.id = "new_" + Math.random(); 
+        nodeCopy.onclick = function() { this.remove(); };
+        ev.target.appendChild(nodeCopy);
+    }
+</script>
+
+</body>
+</html>

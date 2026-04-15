@@ -68,6 +68,14 @@
     }
    </style>
 </head>
+<script>
+    // TÜRSTEHER-CHECK
+    if (sessionStorage.getItem("auth") !== "true") {
+        window.location.href = "login.html";
+    }
+</script>
+
+
 <body>
 
 <button class="btn-print" onclick="window.print()">🖨️ Plan drucken</button>
@@ -79,7 +87,7 @@
         <strong>📋 Planungshilfe (pro 45 Min. Einheit):</strong>
         <ul style="margin: 5px 0 0 15px; padding: 0;">
             <li><strong>Warm-up:</strong> 2-3 Übungen (Wechsel alle 3-4 Min.)</li>
-            <li><strong>Ballgefühl:</strong> 2-3 Übungen (kleine Challenges einbauen)</li>
+            <li><strong>Ballgefühl:</strong> 2-5 Übungen (kleine Challenges einbauen)</li>
             <li><strong>Technik:</strong> Max. 1-2 Schwerpunkte (Qualität vor Quantität)</li>
             <li><strong>Abschluss:</strong> 1 Spiel für den maximalen Spaßfaktor</li>
         </ul>

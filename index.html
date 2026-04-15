@@ -2,61 +2,37 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Tennis-Trainer Baukasten</title>
+    <title>Login - Tennis Trainer Tool</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
-        .grid-container { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-            gap: 20px; 
-        }
-        .phase-card { 
-            background: white; padding: 20px; border-radius: 8px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-top: 5px solid #2ecc71;
-        }
-        .phase-card h3 { color: #27ae60; margin-top: 0; }
-        .btn-link { 
-            display: inline-block; margin-top: 15px; padding: 10px;
-            background: #3498db; color: white; text-decoration: none; border-radius: 4px;
-        }
-        .btn-link:hover { background: #2980b9; }
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #27ae60; margin: 0; }
+        .login-box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; width: 300px; }
+        h2 { color: #2c3e50; margin-bottom: 20px; }
+        input { padding: 12px; width: 80%; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
+        button { padding: 12px 25px; background: #2c3e50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 90%; }
+        button:hover { background: #1a252f; }
+        #error { color: #e74c3c; font-size: 0.9em; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
-    <h1>Lernsensible Phasen im Tennis</h1>
-    <div class="grid-container">
-        <!-- Beispiel Karte für Stufe Rot -->
-        
-        
-        <!-- Hier weitere Karten für 8-10, 10-12 etc. einfügen -->
+    <div class="login-box">
+        <h2>Trainer Login</h2>
+        <input type="password" id="pwField" placeholder="Passwort" onkeypress="if(event.key === 'Enter') checkPW()">
+        <button onclick="checkPW()">Einloggen</button>
+        <p id="error">Falsches Passwort!</p>
     </div>
-    <!-- In deiner index.html -->
-    <div class="phase-card">
-        <h3>4-8 Jahre (Stufe Rot)</h3>
-        <ul>
-            <li>Koordination (Rhythmus)</li>
-            <li>Frequenzschnelligkeit</li>
-        </ul>
-        <!-- Hier der Link zu deiner neuen Datei -->
-        <a href="planer.html" class="btn-link">Zum Trainings-Baukasten</a>
-    </div>
-<footer class="no-print" style="margin-top: 50px; padding: 20px; border-top: 1px solid #ddd; font-size: 0.8em; text-align: center; color: #888;">
-    <p>&copy; 2023 Tennis-Trainer Baukasten | Privatprojekt für Trainerfortbildung</p>
-    <p>
-        <a href="#impressum" onclick="document.getElementById('legal').style.display='block'" style="color: #666;">Impressum & Rechtliches</a>
-    </p>
-    
-    <div id="legal" style="display:none; text-align: left; background: #fff; border: 1px solid #ccc; padding: 20px; margin-top: 10px;">
-        <strong>Impressum:</strong><br>
-        Sönke Großmann<br>
-        Eichenring 109<br>
-        15749 Mittenwalde<br>
-        E-Mail: tennissg@web.de<br><br>
-        <strong>Haftungshinweis:</strong> Die Nutzung der Trainingsinhalte erfolgt auf eigene Gefahr. 
-        Diese Seite dient ausschließlich zu Demonstrationszwecken für einen geschlossenen Trainerkreis.
-        <br><button onclick="this.parentElement.style.display='none'">Schließen</button>
-    </div>
-</footer>
 
+    <script>
+        function checkPW() {
+            const pw = document.getElementById("pwField").value;
+            // Hier dein Passwort festlegen:
+            if (pw === "tennis2024") {
+                sessionStorage.setItem("auth", "true");
+                window.location.href = "start.html";
+            } else {
+                document.getElementById("error").style.display = "block";
+            }
+        }
+    </script>
 </body>
 </html>
+

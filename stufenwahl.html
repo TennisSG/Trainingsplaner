@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Stufenwahl - Tennis Planer</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { display: block; overflow-y: auto; text-align: center; background: #f4f7f6; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; margin-bottom: 10px; }
+        .stufen-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; margin-top: 30px; 
+        }
+        .stufen-card { 
+            background: white; padding: 20px; border-radius: 12px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-decoration: none; 
+            color: #333; transition: 0.3s; border-top: 8px solid #ccc;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .stufen-card:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+        
+        .rot { border-top-color: #e74c3c; }
+        .orange { border-top-color: #f39c12; }
+        .gruen { border-top-color: #27ae60; }
+        .gelb { border-top-color: #f1c40f; }
+        
+        .stufen-card h2 { margin: 10px 0; font-size: 1.3em; }
+        .alter { font-weight: bold; color: #666; margin-bottom: 10px; }
+        .info { font-size: 0.8em; color: #777; line-height: 1.4; flex-grow: 1; margin-bottom: 15px; text-align: left; }
+        .btn-select { background: #2c3e50; color: white; padding: 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="nav-header">
+        <a href="start.html" class="btn-nav">⬅ Zurück zum Kalender</a>
+    </div>
+    
+    <div class="container">
+        <h1 id="monat-titel">Training planen</h1>
+        <p>Bitte wähle die Lernphase/Altersstufe deiner Gruppe aus:</p>
+
+        <div class="stufen-grid">
+            <!-- ROT -->
+            <a href="#" id="link-rot" class="stufen-card rot">
+                <h2>Stufe ROT</h2>
+                <div class="alter">4 - 8 Jahre</div>
+                <div class="info">Fokus: Koordination, Schnelligkeit & Werfen. Kleinfeld-Grundlagen.</div>
+                <div class="btn-select">Auswählen</div>
+            </a>
+
+            <!-- ORANGE -->
+            <a href="#" id="link-orange" class="stufen-card orange">
+                <h2>Stufe ORANGE</h2>
+                <div class="alter">9 - 10 Jahre</div>
+                <div class="info">Fokus: Midcourt-Taktik, verfeinerte Technik & Orientierung im Feld.</div>
+                <div class="btn-select">Auswählen</div>
+            </a>
+
+            <!-- GRÜN (NEU) -->
+            <a href="#" id="link-gruen" class="stufen-card gruen">
+                <h2>Stufe GRÜN</h2>
+                <div class="alter">11 - 12 Jahre</div>
+                <div class="info">Fokus: Übergang zum Großfeld. Match-Taktik, Netzangriff & Variation.</div>
+                <div class="btn-select">Auswählen</div>
+            </a>
+
+            <!-- GELB 1 -->
+            <a href="#" id="link-gelb1" class="stufen-card gelb">
+                <h2>Stufe GELB 1</h2>
+                <div class="alter">12 - 15 Jahre</div>
+                <div class="info">Fokus: Präzision, Spin & Ausdauer. Volles Großfeld-Tennis.</div>
+                <div class="btn-select">Auswählen</div>
+            </a>
+
+            <!-- GELB 2 -->
+            <a href="#" id="link-gelb2" class="stufen-card gelb">
+                <h2>Stufe GELB 2</h2>
+                <div class="alter">16 - 18 Jahre</div>
+                <div class="info">Leistungstraining: Taktik unter Druck, Matchhärte & Athletik.</div>
+                <div class="btn-select">Auswählen</div>
+            </a>
+
+            <!-- GELB 3 -->
+            <a href="#" id="link-gelb3" class="stufen-card gelb">
+                <h2>Stufe GELB 3</h2>
+                <div class="alter">Leistungskader</div>
+                <div class="info">Profi-Fokus: Mentale Stärke, Analyse & Turniervorbereitung.</div>
+                <div class="btn-select">Auswählen</div>
+            </a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const monat = params.get('monat') || 'mai';
+        document.getElementById('monat-titel').innerText = "Planung für " + monat.toUpperCase();
+
+        // Links dynamisch setzen
+        document.getElementById('link-rot').href = "planer-rot.html?monat=" + monat;
+        document.getElementById('link-orange').href = "planer-orange.html?monat=" + monat;
+        document.getElementById('link-gruen').href = "planer-gruen.html?monat=" + monat;
+        document.getElementById('link-gelb1').href = "planer-gelb1.html?monat=" + monat;
+        document.getElementById('link-gelb2').href = "planer-gelb2.html?monat=" + monat;
+        document.getElementById('link-gelb3').href = "planer-gelb3.html?monat=" + monat;
+    </script>
+</body>
+</html>
+

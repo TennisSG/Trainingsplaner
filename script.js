@@ -4,23 +4,33 @@ if (sessionStorage.getItem("auth") !== "true" && !window.location.href.includes(
 }
 
 // 2. MONATS-FILTER & INITIALISIERUNG
-window.onload = function() {
+// Schnellere Initialisierung
+document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
     const monat = urlParams.get('monat');
     
-    // Aktuellen Planer-Namen ermitteln (aus Dateiname)
+    // Aktuellen Planer-Namen ermitteln
     const path = window.location.pathname;
     const page = path.split("/").pop().replace(".html", "").replace("planer-", "STUFE: ").toUpperCase();
 
     if (monat) {
-        document.getElementById('display-monat').innerText = "MONAT: " + monat.toUpperCase();
-        document.getElementById('display-planer').innerText = page;
+        const monatDisplay = document.getElementById('display-monat');
+        const planerDisplay = document.getElementById('display-planer');
+        
+        if(monatDisplay) monatDisplay.innerText = "MONAT: " + monat.toUpperCase();
+        if(planerDisplay) planerDisplay.innerText = page;
+        
+        // Übungen sofort filtern
         document.querySelectorAll('.draggable').forEach(el => {
-            if (!el.classList.contains(monat)) { el.style.display = 'none'; } 
-            else { el.style.display = 'block'; }
+            if (!el.classList.contains(monat)) { 
+                el.style.display = 'none'; 
+            } else {
+                el.style.display = 'block';
+            }
         });
     }
-};
+});
+
 
 // 3. TAB-LOGIK & DRAG-DROP
 function filterPool(cat, btn) {
